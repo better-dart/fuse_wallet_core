@@ -6,11 +6,21 @@ description: Fuse wallet core Dart library to interact with Ethereum based netwo
 environment:
   sdk: ">=2.2.2 <3.0.0"
 dependencies:
-  bip32: ^1.0.5
-  bip39: ^1.0.3
-  hex: ^0.1.2
-  http: ^0.12.2
-  resource: ^2.1.7
-  web3dart: ^1.2.3
-  graphql: ^3.1.0
-  decimal: ^0.3.5
+  # bip32: ^1.0.5
+  bip32:
+    git:
+      url: git://github.com/dart-bitcoin/bip32-dart.git
+      ref: "1e15731"
+
+
+  bip39: ^1.0.6
+  hex: ^0.2.0
+  http: ^0.13.1
+  # resource: ^2.1.7 # not use
+  # web3dart: ^1.2.3
+  web3dart:
+      git:
+        url: git://github.com/better-dart/web3dart.git
+        ref: migrate-to-v2-null-safety      # commit id
+  graphql: ^5.0.0-nullsafety.3
+  decimal: ^1.0.0+1
