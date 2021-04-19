@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 String hexZeroPad(String value, num length) {
   print('hexZeroPad: $value, size:$length');
   while (value.length < 2 * length + 2) {
@@ -17,3 +19,12 @@ String toRopsten(String baseURI) {
     return baseURI.replaceAll('studio', 'studio-ropsten');
   }
 }
+
+///
+/// global logger:
+///
+final logger = Logger(
+  printer: PrefixPrinter(
+    PrettyPrinter(printTime: true),
+  ),
+);

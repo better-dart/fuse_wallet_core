@@ -161,10 +161,10 @@ class Web3 {
 
     try {
       var ret = await _client.call(contract: contract, function: contract.function(functionName), params: params);
-      print('_readFromContract: contract:$contract, name:$contractName, address: $contractAddress, result:$ret');
+      logger.i('_readFromContract: contract:$contract, name:$contractName, address: $contractAddress, result:$ret');
       return ret;
     } catch (error, trace) {
-      print('_readFromContract error : contract:$contract, name:$contractName, address: $contractAddress, error:$error, trace:$trace');
+      logger.e('_readFromContract error : contract:$contract, name:$contractName, address: $contractAddress, error:$error, trace:$trace');
     }
     return [];
   }

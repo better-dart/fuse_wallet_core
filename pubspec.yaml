@@ -13,10 +13,12 @@ dependencies:
   resource: ^2.1.7
 
 
+  web3dart: ^1.2.3
+#  web3dart:
+#    path: /Users/henry/Documents/iSpace/better-dart/web3dart
 
-  #  web3dart: ^1.2.3
-  web3dart:
-    path: /Users/henry/Documents/iSpace/better-dart/web3dart
+  # color logger:
+  logger:
 
   graphql: ^3.1.0
   decimal: ^0.3.5
