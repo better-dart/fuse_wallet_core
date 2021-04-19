@@ -157,8 +157,8 @@ class Web3 {
 
   ///
   Future<List<dynamic>> _readFromContract(String contractName, String contractAddress, String functionName, List<dynamic> params) async {
+    DeployedContract contract = await _contract(contractName, contractAddress);
     try {
-      DeployedContract contract = await _contract(contractName, contractAddress);
       var ret = await _client.call(contract: contract, function: contract.function(functionName), params: params);
       logger.i('_readFromContract: contract:$contract, name:$contractName, address: $contractAddress, result:$ret');
       return ret;
@@ -180,9 +180,9 @@ class Web3 {
 
   Future<dynamic> getTokenDetails(String tokenAddress) async {
     return {
-      "name": (await _readFromContract('BasicToken', tokenAddress, 'name', [])).first,
-      "symbol": (await _readFromContract('BasicToken', tokenAddress, 'symbol', [])).first,
-      "decimals": (await _readFromContract('BasicToken', tokenAddress, 'decimals', [])).first
+      "name": (await _readFromContract('BasicToken', tokenAddress, 'name', []))?.first,
+      "symbol": (await _readFromContract('BasicToken', tokenAddress, 'symbol', []))?.first,
+      "decimals": (await _readFromContract('BasicToken', tokenAddress, 'decimals', []))?.first
     };
   }
 
@@ -193,7 +193,7 @@ class Web3 {
     } else {
       params = [EthereumAddress.fromHex(await getAddress())];
     }
-    var ret = (await _readFromContract('BasicToken', tokenAddress, 'balanceOf', params)).first;
+    var ret = (await _readFromContract('BasicToken', tokenAddress, 'balanceOf', params))?.first;
     print('getTokenBalance: $tokenAddress, $address, result: $ret');
     return ret;
   }
@@ -538,8 +538,8 @@ class Web3 {
   // SEEDBED CONTRACTS
   Future<dynamic> getRewardsInfo(String marketMakerContractAddress) async {
     return {
-      "newMintedReward": (await _readFromContract('MarketMaker', marketMakerContractAddress, 'getNewMintedReward', [])).first,
-      "mintedReward": (await _readFromContract('MarketMaker', marketMakerContractAddress, 'getMintedReward', [])).first,
+      "newMintedReward": (await _readFromContract('MarketMaker', marketMakerContractAddress, 'getNewMintedReward', []))?.first,
+      "mintedReward": (await _readFromContract('MarketMaker', marketMakerContractAddress, 'getMintedReward', []))?.first,
     };
   }
 }
