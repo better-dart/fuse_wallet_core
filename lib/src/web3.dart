@@ -157,14 +157,13 @@ class Web3 {
 
   ///
   Future<List<dynamic>> _readFromContract(String contractName, String contractAddress, String functionName, List<dynamic> params) async {
-    DeployedContract contract = await _contract(contractName, contractAddress);
-
     try {
+      DeployedContract contract = await _contract(contractName, contractAddress);
       var ret = await _client.call(contract: contract, function: contract.function(functionName), params: params);
       logger.i('_readFromContract: contract:$contract, name:$contractName, address: $contractAddress, result:$ret');
       return ret;
     } catch (error, trace) {
-      logger.e('_readFromContract error : contract:$contract, name:$contractName, address: $contractAddress, error:$error, trace:$trace');
+      logger.e('_readFromContract error : contract:$contract, name:$contractName, address: $contractAddress, fn:$functionName, args:$params, error:$error, trace:$trace');
     }
     return [];
   }
