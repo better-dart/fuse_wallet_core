@@ -128,7 +128,9 @@ class Web3 {
       a = EthereumAddress.fromHex(await getAddress());
     }
 
-    return await _client.getBalance(a);
+    var ret = await _client.getBalance(a);
+    print('getBalance: $address, $a, $ret');
+    return ret;
   }
 
   Future<String> transfer(String receiverAddress, int amountInWei) async {
