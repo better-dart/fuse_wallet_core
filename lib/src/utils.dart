@@ -1,4 +1,5 @@
 String hexZeroPad(String value, num length) {
+  print('hexZeroPad: $value, size:$length');
   while (value.length < 2 * length + 2) {
     value = '0x0' + value.substring(2);
   }
