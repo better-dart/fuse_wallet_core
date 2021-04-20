@@ -149,15 +149,29 @@ class Web3 {
     return txHash;
   }
 
+  ///
+  /// 合约 abi:
+  ///
   Future<DeployedContract> _contract(String contractName, String contractAddress) async {
+    ///
+    /// 合约 abi get:
+    ///
     String abi = ABI.get(contractName);
+
+    ///
+    /// deploy contract abi:
+    ///
     DeployedContract contract = DeployedContract(ContractAbi.fromJson(abi, contractName), EthereumAddress.fromHex(contractAddress));
     return contract;
   }
 
   ///
   Future<List<dynamic>> _readFromContract(String contractName, String contractAddress, String functionName, List<dynamic> params) async {
+    ///
+    /// 合约:
+    ///
     DeployedContract contract = await _contract(contractName, contractAddress);
+
     try {
       var ret = await _client.call(contract: contract, function: contract.function(functionName), params: params);
       logger.i('_readFromContract: contract:$contract, name:$contractName, address: $contractAddress, result:$ret');
