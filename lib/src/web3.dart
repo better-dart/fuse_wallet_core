@@ -166,7 +166,7 @@ class Web3 {
       EthereumAddress.fromHex(contractAddress),
     );
 
-    logger.i('fuse-wallet - _contract: $contractName, $contractAddress');
+    logger.i('debugX: fuse-wallet - _contract: $contractName, $contractAddress');
     return contract;
   }
 
@@ -179,10 +179,10 @@ class Web3 {
 
     try {
       var ret = await _client.call(contract: contract, function: contract.function(functionName), params: params);
-      logger.i('_readFromContract: name:$contractName, address: $contractAddress, result:$ret');
+      logger.i('debugX: _readFromContract done: name:$contractName, address: $contractAddress, fn:$functionName, args:$params, result:$ret');
       return ret;
     } catch (error, trace) {
-      logger.e('_readFromContract error : contract:$contract, name:$contractName, address: $contractAddress, fn:$functionName, args:$params, error:$error, trace:$trace');
+      logger.e('debugX: _readFromContract error : name:$contractName, address: $contractAddress, fn:$functionName, args:$params, error:$error, trace:$trace');
     }
     return [];
   }
