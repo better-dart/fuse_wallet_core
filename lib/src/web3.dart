@@ -33,7 +33,8 @@ class Web3 {
   String _transferManagerContractAddress;
   int _defaultGasLimit;
 
-  Web3(Future<bool> approveCb(), {
+  Web3(
+    Future<bool> approveCb(), {
     String url,
     int networkId,
     String defaultCommunityAddress,
@@ -76,6 +77,10 @@ class Web3 {
     return _client.getBlockNumber();
   }
 
+  ///
+  ///
+  ///
+  ///
   Future<String> _sendTransactionAndWaitForReceipt(Transaction transaction) async {
     print('sendTransactionAndWaitForReceipt');
 
@@ -88,7 +93,6 @@ class Web3 {
     return txHash;
   }
 
-
   /// for sendTx:
   Future<int> getTxNonce({String address}) async {
     var addr = EthereumAddress.fromHex(address);
@@ -96,9 +100,8 @@ class Web3 {
     return count + 1;
   }
 
-
   /// pub tx to chain:
-  Future<String> sendTx(Transaction transaction, { bool fetchChainIdFromNetworkId = false}) async {
+  Future<String> sendTx(Transaction transaction, {bool fetchChainIdFromNetworkId = false}) async {
     String txHash = await _sendTransactionAndWaitForReceipt(transaction);
     return txHash;
   }
@@ -264,13 +267,48 @@ class Web3 {
     return '0x' + blockHex.substring(2, blockHex.length) + timestampHex.substring(2, timestampHex.length);
   }
 
-  Future<String> signOffChain(String from, String to, BigInt value, String data, String nonce, BigInt gasPrice, BigInt gasLimit) async {
-    dynamic inputArr = ['0x19', '0x00', from, to, hexZeroPad(hexlify(value), 32), data, nonce, hexZeroPad(hexlify(gasPrice), 32), hexZeroPad(hexlify(gasLimit), 32)];
+  ///
+  ///
+  ///
+  ///
+  Future<String> signOffChain(
+    String from,
+    String to,
+    BigInt value,
+    String data,
+    String nonce,
+    BigInt gasPrice,
+    BigInt gasLimit,
+  ) async {
+    dynamic inputArr = [
+      '0x19',
+      '0x00',
+      from,
+      to,
+      hexZeroPad(hexlify(value), 32),
+      data,
+      nonce,
+      hexZeroPad(hexlify(gasPrice), 32),
+      hexZeroPad(hexlify(gasLimit), 32),
+    ];
+
+    print('inputArr: $inputArr');
+
+    ///
+    ///
+    ///
     String input = '0x' + inputArr.map((hexStr) => hexStr.toString().substring(2)).join('');
     print('input: $input');
+
     Uint8List hash = keccak256(hexToBytes(input));
+
     print('hash: ${HEX.encode(hash)}');
     print('signing on message with accountAddress: ${await _credentials.extractAddress()}');
+
+    ///
+    ///
+    ///
+    ///
     Uint8List signature = await _credentials.signPersonalMessage(hash);
     return '0x' + HEX.encode(signature);
   }
@@ -289,14 +327,7 @@ class Web3 {
     String encodedData = '0x' + HEX.encode(data);
     print('encodedData: $encodedData');
 
-    String signature = await signOffChain(
-        _daiPointsManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+    String signature = await signOffChain(_daiPointsManagerContractAddress, walletAddress, BigInt.from(0), encodedData, nonce, BigInt.from(0), BigInt.from(_defaultGasLimit));
 
     return {
       "walletAddress": walletAddress,
@@ -320,13 +351,14 @@ class Web3 {
     print('encodedData: $encodedData');
 
     String signature = await signOffChain(
-        _communityManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+      _communityManagerContractAddress,
+      walletAddress,
+      BigInt.from(0),
+      encodedData,
+      nonce,
+      BigInt.from(0),
+      BigInt.from(_defaultGasLimit),
+    );
 
     return {
       "walletAddress": walletAddress,
@@ -359,13 +391,14 @@ class Web3 {
     String encodedData = '0x' + HEX.encode(data);
 
     String signature = await signOffChain(
-        _transferManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+      _transferManagerContractAddress,
+      walletAddress,
+      BigInt.from(0),
+      encodedData,
+      nonce,
+      BigInt.from(0),
+      BigInt.from(_defaultGasLimit),
+    );
 
     return {
       "walletAddress": walletAddress,
@@ -397,14 +430,7 @@ class Web3 {
     Uint8List data = contract.function('transferToken').encodeCall([wallet, token, receiver, amount, hexToBytes('0x')]);
     String encodedData = '0x' + HEX.encode(data);
 
-    String signature = await signOffChain(
-        _transferManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+    String signature = await signOffChain(_transferManagerContractAddress, walletAddress, BigInt.from(0), encodedData, nonce, BigInt.from(0), BigInt.from(_defaultGasLimit));
 
     return {
       "walletAddress": walletAddress,
@@ -431,6 +457,11 @@ class Web3 {
     };
   }
 
+  ///
+  ///
+  ///
+  ///
+  ///
   Future<Map<String, dynamic>> approveTokenOffChain(String walletAddress, String tokenAddress, num tokensAmount, {String spenderContract = null, String network = "fuse"}) async {
     EthereumAddress wallet = EthereumAddress.fromHex(walletAddress);
     EthereumAddress token = EthereumAddress.fromHex(tokenAddress);
@@ -449,14 +480,7 @@ class Web3 {
     Uint8List data = contract.function('approveToken').encodeCall([wallet, token, spender, amount]);
     String encodedData = '0x' + HEX.encode(data);
 
-    String signature = await signOffChain(
-        _transferManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+    String signature = await signOffChain(_transferManagerContractAddress, walletAddress, BigInt.from(0), encodedData, nonce, BigInt.from(0), BigInt.from(_defaultGasLimit));
 
     return {
       "walletAddress": walletAddress,
@@ -472,7 +496,17 @@ class Web3 {
     };
   }
 
-  Future<Map<String, dynamic>> callContractOffChain(String walletAddress, String contractAddress, num ethAmount, String data, {String network = "fuse"}) async {
+  ///
+  ///
+  ///
+  ///
+  Future<Map<String, dynamic>> callContractOffChain(
+    String walletAddress,
+    String contractAddress,
+    num ethAmount,
+    String data, {
+    String network = "fuse",
+  }) async {
     EthereumAddress wallet = EthereumAddress.fromHex(walletAddress);
     EthereumAddress contract = EthereumAddress.fromHex(contractAddress);
     Decimal ethAmountDecimal = Decimal.parse(ethAmount.toString());
@@ -484,14 +518,12 @@ class Web3 {
     Uint8List callContractData = TransferManagerContract.function('callContract').encodeCall([wallet, contract, amount, HEX.decode(data)]);
     String encodedCallContractData = '0x' + HEX.encode(callContractData);
 
-    String signature = await signOffChain(
-        _transferManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedCallContractData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+    ///
+    ///
+    ///
+    ///
+    ///
+    String signature = await signOffChain(_transferManagerContractAddress, walletAddress, BigInt.from(0), encodedCallContractData, nonce, BigInt.from(0), BigInt.from(_defaultGasLimit));
 
     return {
       "walletAddress": walletAddress,
@@ -522,14 +554,7 @@ class Web3 {
     Uint8List approveTokenAndCallContractData = TransferManagerContract.function('approveTokenAndCallContract').encodeCall([wallet, token, contract, amount, HEX.decode(data)]);
     String encodedApproveTokenAndCallContractData = '0x' + HEX.encode(approveTokenAndCallContractData);
 
-    String signature = await signOffChain(
-        _transferManagerContractAddress,
-        walletAddress,
-        BigInt.from(0),
-        encodedApproveTokenAndCallContractData,
-        nonce,
-        BigInt.from(0),
-        BigInt.from(_defaultGasLimit));
+    String signature = await signOffChain(_transferManagerContractAddress, walletAddress, BigInt.from(0), encodedApproveTokenAndCallContractData, nonce, BigInt.from(0), BigInt.from(_defaultGasLimit));
 
     return {
       "walletAddress": walletAddress,
